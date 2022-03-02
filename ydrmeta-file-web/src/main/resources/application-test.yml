@@ -1,0 +1,12 @@
+server:
+  port: 9003
+
+logging:
+  config: classpath:logback-spring.xml
+
+#log:
+#  localLogPath: ../log/fileWebLog
+#  cloudLogPath: fileWebLog
+obs:
+  requestUrl: requestUrl
+  accessKeyId: accessKeyId

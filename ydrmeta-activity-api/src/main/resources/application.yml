@@ -1,0 +1,21 @@
+server:
+  servlet:
+    context-path: /metaActivityApi
+
+spring:
+  profiles:
+    active: test,ali
+#    active: prod,ali
+
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+
+logging:
+  config: classpath:logback-spring.xml
+  level:
+    cn.meta.mapper: debug
+
+#log:
+#  localLogPath: ../metaLog/metaActivityLog
+#  cloudLogPath: metaActivityLog

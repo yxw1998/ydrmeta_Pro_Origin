@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.meta.mapper.ActivityWorkMapper">
+    <resultMap id="BaseResultMap" type="cn.meta.entity.ActivityWork">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="activityWorkCode" jdbcType="VARCHAR" property="activityWorkCode"/>
+        <result column="activityWorkTitle" jdbcType="VARCHAR" property="activityWorkTitle"/>
+        <result column="activityWordInfo" jdbcType="VARCHAR" property="activityWordInfo"/>
+        <result column="templateCode" jdbcType="VARCHAR" property="templateCode"/>
+        <result column="isApply" jdbcType="INTEGER" property="isApply"/>
+        <result column="addTime" jdbcType="TIMESTAMP" property="addTime"/>
+        <result column="updateTime" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="enable" jdbcType="BIT" property="enable"/>
+        <result column="activity" jdbcType="BIT" property="activity"/>
+        <result column="createrCode" jdbcType="VARCHAR" property="createrCode"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        activityWorkCode,activityWorkTitle,activityWordInfo,templateCode,isApply
+    </sql>
+    <select id="selByPrimaryCode" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from activity_work
+        where activityWorkCode = #{activityWorkCode}
+        and activity = true
+        and enable = true
+
+    </select>
+
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.meta.entity.ActivityWork"
+            useGeneratedKeys="true">
+        insert into activity_work (activityWorkCode, activityWorkTitle, activityWordInfo, templateCode, isApply,
+                                   addTime,
+                                   updateTime, `enable`, activity,
+                                   createrCode)
+        values (#{activityWorkCode,jdbcType=VARCHAR}, #{activityWorkTitle,jdbcType=VARCHAR},
+                #{activityWordInfo,jdbcType=VARCHAR}, #{templateCode,jdbcType=VARCHAR}, #{isApply,jdbcType=INTEGER},
+                now(),
+                null, true, true,
+                #{createrCode,jdbcType=VARCHAR})
+    </insert>
+</mapper>

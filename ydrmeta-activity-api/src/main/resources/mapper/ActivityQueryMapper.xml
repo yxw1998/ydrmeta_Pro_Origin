@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.meta.mapper.ActivityQueryMapper">
+    <resultMap id="BaseResultMap" type="cn.meta.entity.ActivityQuery">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="activityApplyCode" jdbcType="VARCHAR" property="activityApplyCode"/>
+        <result column="blockCode" jdbcType="VARCHAR" property="blockCode"/>
+        <result column="blockName" jdbcType="VARCHAR" property="blockName"/>
+        <result column="addTime" jdbcType="TIMESTAMP" property="addTime"/>
+        <result column="updateTime" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="enable" jdbcType="BIT" property="enable"/>
+        <result column="activity" jdbcType="BIT" property="activity"/>
+        <result column="createrCode" jdbcType="VARCHAR" property="createrCode"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, activityApplyCode, blockCode, blockName, addTime, updateTime, `enable`, activity,
+    createrCode
+    </sql>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.meta.entity.ActivityQuery"
+            useGeneratedKeys="true">
+        insert into activity_query (activityApplyCode, blockCode, blockName,
+                                    addTime, updateTime, `enable`,
+                                    activity, createrCode)
+        values (#{activityApplyCode,jdbcType=VARCHAR}, #{blockCode,jdbcType=VARCHAR}, #{blockName,jdbcType=VARCHAR},
+                #{addTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{enable,jdbcType=BIT},
+                #{activity,jdbcType=BIT}, #{createrCode,jdbcType=VARCHAR})
+    </insert>
+    <select id="selActivityQueryList" resultType="cn.meta.entity.ActivityQuery">
+        select
+        <include refid="Base_Column_List"/>
+        from activity_query
+        where activityApplyCode = #{activityApplyCode}
+        and enable = true
+        and activity = true
+    </select>
+</mapper>

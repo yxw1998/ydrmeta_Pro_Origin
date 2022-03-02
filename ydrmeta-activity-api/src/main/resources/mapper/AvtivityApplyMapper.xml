@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.meta.mapper.ActivityApplyMapper">
+    <resultMap id="BaseResultMap" type="cn.meta.entity.ActivityApply">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="activityWorkCode" jdbcType="VARCHAR" property="activityWorkCode"/>
+        <result column="activityApplyCode" jdbcType="VARCHAR" property="activityApplyCode"/>
+        <result column="templateCode" jdbcType="VARCHAR" property="templateCode"/>
+        <result column="addTime" jdbcType="TIMESTAMP" property="addTime"/>
+        <result column="updateTime" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="enable" jdbcType="BIT" property="enable"/>
+        <result column="activity" jdbcType="BIT" property="activity"/>
+        <result column="createrCode" jdbcType="VARCHAR" property="createrCode"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        activityWorkCode,activityApplyCode, templateCode
+    </sql>
+
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.meta.entity.ActivityApply"
+            useGeneratedKeys="true">
+        insert into activity_apply (activityWorkCode,activityApplyCode, templateCode,
+                                    addTime, updateTime, `enable`,
+                                    activity, createrCode)
+        values (#{activityWorkCode,jdbcType=VARCHAR},#{activityApplyCode,jdbcType=VARCHAR}, #{templateCode,jdbcType=VARCHAR},
+                now(),
+                null, true, true,
+                #{createrCode,jdbcType=VARCHAR})
+    </insert>
+
+    <select id="selByPrimaryCode" resultType="cn.meta.entity.ActivityApply">
+        select
+        <include refid="Base_Column_List"/>
+        from activity_apply
+        where activityWorkCode = #{activityWorkCode}
+        and activityApplyCode = #{activityApplyCode}
+        and enable = true
+        and activity = true;
+    </select>
+    <select id="checkRepeat" resultType="cn.meta.entity.ActivityApply">
+        select
+        <include refid="Base_Column_List"/>
+        from activity_apply
+        where activityWorkCode = #{activityWorkCode}
+        and templateCode = #{templateCode}
+        and enable = true
+        and activity = true
+    </select>
+
+</mapper>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.meta.mapper.UserApplyBatchMapper">
+    <resultMap id="BaseResultMap" type="cn.meta.entity.UserApplyBatch">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="userCode" jdbcType="VARCHAR" property="userCode"/>
+        <result column="batchCode" jdbcType="VARCHAR" property="batchCode"/>
+        <result column="activityApplyCode" jdbcType="VARCHAR" property="activityApplyCode"/>
+        <result column="addTime" jdbcType="TIMESTAMP" property="addTime"/>
+        <result column="updateTime" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="enable" jdbcType="BIT" property="enable"/>
+        <result column="activity" jdbcType="BIT" property="activity"/>
+        <result column="createrCode" jdbcType="VARCHAR" property="createrCode"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        userCode, batchCode,activityApplyCode
+    </sql>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.meta.entity.UserApplyBatch"
+            useGeneratedKeys="true">
+        insert into user_apply_batch (userCode, batchCode, activityApplyCode, addTime,
+                                      updateTime, `enable`, activity,
+                                      createrCode)
+        values (#{userCode,jdbcType=VARCHAR}, #{batchCode,jdbcType=VARCHAR}, #{activityApplyCode,jdbcType=VARCHAR},
+                now(),
+                null, true, true,
+                #{createrCode,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertList">
+        insert into user_apply_batch (userCode, batchCode,activityApplyCode, addTime,
+        updateTime, `enable`, activity,
+        createrCode)
+        values
+        <foreach collection="userApplyBatchList" item="item" separator=",">
+            (#{item.userCode,jdbcType=VARCHAR}, #{item.batchCode,jdbcType=VARCHAR},
+            #{item.activityApplyCode,jdbcType=VARCHAR},
+            now(),
+            null, true, true,
+            #{item.createrCode,jdbcType=VARCHAR})
+        </foreach>
+    </insert>
+    <select id="checkRepeat" resultType="cn.meta.entity.UserApplyBatch">
+        select userCode
+        from user_apply_batch
+        where userCode = #{userCode}
+          and activityApplyCode = #{activityApplyCode}
+          and enable = true
+          and activity = true
+    </select>
+    <select id="selUserBatchInfoList" resultType="cn.meta.entity.UserApplyBatch">
+        select
+        <include refid="Base_Column_List"/>
+        from user_apply_batch
+        where activity = true
+        and enable = true
+        and userCode = #{userCode}
+        <if test="!@cn.meta.util.StringUtils@isEmpty(activityApplyCode)">
+            and activityApplyCode = #{activityApplyCode}
+        </if>
+    </select>
+</mapper>

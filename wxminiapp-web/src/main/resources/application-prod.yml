@@ -1,0 +1,5 @@
+server:
+  port: 9001
+
+forward:
+  api-url: http://192.168.0.60:9081/metaActivityApi/

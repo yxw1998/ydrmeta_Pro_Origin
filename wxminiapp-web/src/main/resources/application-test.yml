@@ -1,0 +1,5 @@
+server:
+  port: 8981
+
+forward:
+  api-url: http://localhost:9081/metaActivityApi/

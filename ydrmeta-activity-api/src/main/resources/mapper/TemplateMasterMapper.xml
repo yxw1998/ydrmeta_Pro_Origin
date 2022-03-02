@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.meta.mapper.TemplateMasterMapper">
+    <resultMap id="BaseResultMap" type="cn.meta.entity.TemplateMaster">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="templateCode" jdbcType="VARCHAR" property="templateCode"/>
+        <result column="templateName" jdbcType="VARCHAR" property="templateName"/>
+        <result column="templateType" jdbcType="INTEGER" property="templateType"/>
+        <result column="addTime" jdbcType="TIMESTAMP" property="addTime"/>
+        <result column="updateTime" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="enable" jdbcType="BIT" property="enable"/>
+        <result column="activity" jdbcType="BIT" property="activity"/>
+        <result column="createrCode" jdbcType="VARCHAR" property="createrCode"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        templateCode, templateName, templateType
+    </sql>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.meta.entity.TemplateMaster"
+            useGeneratedKeys="true">
+        insert into template_master (templateCode, templateName, templateType,
+                                     addTime, updateTime, `enable`,
+                                     activity, createrCode)
+        values (#{templateCode,jdbcType=VARCHAR}, #{templateName,jdbcType=VARCHAR}, #{templateType,jdbcType=INTEGER},
+                now(),
+                null, true, true,
+                #{createrCode,jdbcType=VARCHAR})
+    </insert>
+    <select id="selListByPrimaryCode" resultType="cn.meta.entity.TemplateMaster">
+        select * from template_master
+        <where>
+            activity = true
+            and enable = true
+            <if test="templateCodeList.size>0">
+                and templateCode in (
+                <foreach collection="templateCodeList" item="item" separator=",">
+                    #{item}
+                </foreach>
+                )
+            </if>
+        </where>
+    </select>
+    <select id="selByPrimaryCode" resultType="cn.meta.entity.TemplateMaster">
+        select
+        <include refid="Base_Column_List"/>
+        from template_master
+        where templateCode = #{templateCode}
+        and activity = true
+        and enable = true
+    </select>
+    <select id="checkRepeat" resultType="cn.meta.entity.TemplateMaster">
+        select templateName
+        from template_master
+        where templateName = #{templateName}
+        and activity = true
+        and enable = true
+    </select>
+</mapper>

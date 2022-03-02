@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    username: USERNAME
+    password: PASSWORD
+    url: URL
+    hikari:
+      max-lifetime: 100000
+  redis:
+    host: HOST
+    password: PASSWORD
+    database: 5
+
+
+server:
+  port: 9081

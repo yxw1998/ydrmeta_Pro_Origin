@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.meta.mapper.BlockMasterMapper">
+    <resultMap id="BaseResultMap" type="cn.meta.entity.BlockMaster">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="templateCode" jdbcType="VARCHAR" property="templateCode"/>
+        <result column="blockCode" jdbcType="VARCHAR" property="blockCode"/>
+        <result column="blockName" jdbcType="VARCHAR" property="blockName"/>
+        <result column="blockType" jdbcType="INTEGER" property="blockType"/>
+        <result column="blockConstraint" jdbcType="VARCHAR" property="blockConstraint"/>
+        <result column="parentCode" jdbcType="VARCHAR" property="parentCode"/>
+        <result column="sort" jdbcType="INTEGER" property="sort"/>
+        <result column="addTime" jdbcType="TIMESTAMP" property="addTime"/>
+        <result column="updateTime" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="enable" jdbcType="BIT" property="enable"/>
+        <result column="activity" jdbcType="BIT" property="activity"/>
+        <result column="createrCode" jdbcType="VARCHAR" property="createrCode"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        templateCode, blockCode, blockName, blockType, blockConstraint,parentCode, sort
+    </sql>
+    <select id="selByTemplateCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from block_master
+        where templateCode = #{templateCode}
+    </select>
+    <select id="checkRepeat" resultType="cn.meta.entity.BlockMaster">
+        select blockName
+        from block_master
+        where templateCode = #{templateCode}
+          and blockName = #{blockName}
+          and activity = true
+          and enable = true
+    </select>
+
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.meta.entity.BlockMaster"
+            useGeneratedKeys="true">
+        insert into block_master (templateCode, blockCode, blockName,
+                                  blockType, blockConstraint, parentCode, sort,
+                                  addTime, updateTime,
+                                  `enable`, activity, createrCode)
+        values (#{templateCode,jdbcType=VARCHAR}, #{blockCode,jdbcType=VARCHAR}, #{blockName,jdbcType=VARCHAR},
+                #{blockType,jdbcType=INTEGER}, #{blockConstraint,jdbcType=VARCHAR}, #{parentCode,jdbcType=VARCHAR},
+                #{sort,jdbcType=INTEGER},
+                now(),
+                null, true, true,
+                #{createrCode,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertBlockList">
+        insert into block_master (templateCode, blockCode, blockName,blockType, blockConstraint, parentCode, sort,
+        addTime, updateTime,`enable`, activity, createrCode) values
+        <if test="blockMasterList.size() > 0">
+            <foreach collection="blockMasterList" item="item" separator=",">
+                (#{item.templateCode,jdbcType=VARCHAR}, #{item.blockCode,jdbcType=VARCHAR},
+                #{item.blockName,jdbcType=VARCHAR},
+                #{item.blockType,jdbcType=INTEGER}, #{item.blockConstraint,jdbcType=VARCHAR},
+                #{item.parentCode,jdbcType=VARCHAR},
+                #{item.sort,jdbcType=INTEGER},
+                now(),
+                null, true, true,
+                #{item.createrCode,jdbcType=VARCHAR})
+            </foreach>
+        </if>
+    </insert>
+</mapper>

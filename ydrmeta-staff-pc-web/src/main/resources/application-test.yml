@@ -1,0 +1,9 @@
+server:
+  port: 9002
+spring:
+  redis:
+    host: HOST
+    password: PWD
+    database: 5
+forward:
+  api-url: AU

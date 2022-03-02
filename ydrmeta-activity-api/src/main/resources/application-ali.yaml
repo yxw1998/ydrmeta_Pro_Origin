@@ -1,0 +1,8 @@
+ali:
+  accessKeyId: AK
+  accessKeySecret: AKS
+  domain: DOMAIN
+  regionId: REGIONID
+  signName: 'SMS'
+  templateCode:
+    code: CODE

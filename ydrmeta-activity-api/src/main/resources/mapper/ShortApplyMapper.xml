@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.meta.mapper.ShortApplyMapper">
+    <resultMap id="BaseResultMap" type="cn.meta.entity.ShortApply">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="userCode" jdbcType="VARCHAR" property="userCode"/>
+        <result column="shortApplyCode" jdbcType="VARCHAR" property="shortApplyCode"/>
+        <result column="companyName" jdbcType="VARCHAR" property="companyName"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="companyAddress" jdbcType="VARCHAR" property="companyAddress"/>
+        <result column="addTime" jdbcType="TIMESTAMP" property="addTime"/>
+        <result column="updateTime" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="enable" jdbcType="BIT" property="enable"/>
+        <result column="activity" jdbcType="BIT" property="activity"/>
+        <result column="createrCode" jdbcType="VARCHAR" property="createrCode"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        userCode, shortApplyCode, companyName, `name`, phone, companyAddress
+    </sql>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.meta.entity.ShortApply"
+            useGeneratedKeys="true">
+        insert into short_apply (userCode, shortApplyCode, companyName,
+                                 `name`, phone, companyAddress,
+                                 addTime, updateTime, `enable`,
+                                 activity, createrCode)
+        values (#{userCode,jdbcType=VARCHAR}, #{shortApplyCode,jdbcType=VARCHAR}, #{companyName,jdbcType=VARCHAR},
+                #{name,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{companyAddress,jdbcType=VARCHAR},
+                now(),
+                null, true, true,
+                #{createrCode,jdbcType=VARCHAR})
+    </insert>
+    <update id="updateShortApply">
+        update short_apply
+        set companyName    = #{companyName},
+            `name`         = #{name},
+            phone          = #{phone},
+            companyAddress = #{companyAddress}
+        where userCode = #{userCode}
+          and activity = true
+          and enable = true
+    </update>
+    <select id="selShortApplyByUserCode" resultType="cn.meta.entity.ShortApply">
+        select
+        <include refid="Base_Column_List"/>
+        from short_apply
+        where userCode = #{userCode}
+        and `enable` = true
+        and activity = true
+    </select>
+    <select id="checkRepeat" resultType="cn.meta.entity.ShortApply">
+        select userCode
+        from short_apply
+        where userCode = #{userCode}
+          and enable = true
+          and activity = true
+    </select>
+    <select id="selShortApplyList" resultType="cn.meta.entity.ShortApply">
+        select
+        <include refid="Base_Column_List"/>
+        from short_apply
+        where enable = true and activity = true
+        <if test="shortApplyVo.name.length() > 0">
+            and name = #{shortApplyVo.name}
+        </if>
+        <if test="shortApplyVo.phone.length() > 0 ">
+            and phone = #{shortApplyVo.phone}
+        </if>
+    </select>
+    <select id="selAll" resultType="cn.meta.entity.ShortApply">
+        select *
+        from short_apply
+        where enable = true
+          and activity = true
+    </select>
+</mapper>

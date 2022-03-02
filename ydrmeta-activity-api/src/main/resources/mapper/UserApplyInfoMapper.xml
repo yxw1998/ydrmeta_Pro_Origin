@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.meta.mapper.UserApplyInfoMapper">
+    <resultMap id="BaseResultMap" type="cn.meta.entity.UserApplyInfo">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="userCode" jdbcType="VARCHAR" property="userCode"/>
+        <result column="batchCode" jdbcType="VARCHAR" property="batchCode"/>
+        <result column="activityApplyCode" jdbcType="VARCHAR" property="activityApplyCode"/>
+        <result column="templateCode" jdbcType="VARCHAR" property="templateCode"/>
+        <result column="blockCode" jdbcType="VARCHAR" property="blockCode"/>
+        <result column="blockContent" jdbcType="VARCHAR" property="blockContent"/>
+        <result column="addTime" jdbcType="TIMESTAMP" property="addTime"/>
+        <result column="updateTime" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="enable" jdbcType="BIT" property="enable"/>
+        <result column="activity" jdbcType="BIT" property="activity"/>
+        <result column="createrCode" jdbcType="VARCHAR" property="createrCode"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        userCode,batchCode, activityApplyCode, templateCode,blockCode, blockContent
+    </sql>
+    <insert id="insertList" keyColumn="id" keyProperty="id" parameterType="cn.meta.entity.UserApplyInfo"
+            useGeneratedKeys="true">
+        <if test="userApplyInfoList.size()>0">
+            insert into user_apply_info (userCode,batchCode, activityApplyCode,
+            templateCode,blockCode,blockContent, addTime, updateTime,
+            `enable`, activity, createrCode
+            )
+            values
+            <foreach collection="userApplyInfoList" separator="," item="item">
+                (#{item.userCode,jdbcType=VARCHAR}, #{item.batchCode,jdbcType=VARCHAR},
+                #{item.activityApplyCode,jdbcType=VARCHAR},
+                #{item.templateCode,jdbcType=VARCHAR}, #{item.blockCode,jdbcType=VARCHAR},
+                #{item.blockContent,jdbcType=VARCHAR},
+                now(),
+                null, true, true, #{item.createrCode,jdbcType=VARCHAR}
+                )
+            </foreach>
+        </if>
+
+    </insert>
+    <update id="updateUserApplyInfo">
+        update user_apply_info
+        set blockContent = #{blockContent}
+        where userCode = #{userCode}
+          and batchCode = #{batchCode}
+          and activityApplyCode = #{activityApplyCode}
+          and templateCode = #{templateCode}
+          and blockCode = #{blockCode}
+          and `enable` = true
+          and activity = true
+
+    </update>
+    <select id="selUserApplyInfoList" resultType="cn.meta.entity.UserApplyInfo">
+        select
+        <include refid="Base_Column_List"/>
+        from user_apply_info
+        where userCode = #{userCode}
+        and batchCode = #{batchCode}
+        and activityApplyCode = #{activityApplyCode}
+        and `enable` = true
+        and activity = true
+
+    </select>
+    <select id="checkRepeat" resultType="cn.meta.entity.UserApplyInfo">
+        select userCode
+        from user_apply_info
+        where userCode = #{userCode}
+          and batchCode = #{batchCode}
+          and activityApplyCode = #{activityApplyCode}
+          and templateCode = #{templateCode}
+          and blockCode = #{blockCode}
+          and `enable` = true
+          and activity = true
+    </select>
+    <select id="selUserApplyInfoListByApplyCode" resultType="cn.meta.entity.UserApplyInfo">
+        select
+        <include refid="Base_Column_List"/>
+        from user_apply_info
+        where activityApplyCode = #{activityApplyCode}
+        and `enable` = true
+        and activity = true
+    </select>
+    <select id="selUserApplyInfoByNamePhone" resultType="cn.meta.entity.UserApplyInfo">
+        select
+        <include refid="Base_Column_List"/>
+        from user_apply_info
+        where blockCode = #{blockCode}
+        and blockContent = #{blockContent}
+        and activityApplyCode = #{activityApplyCode}
+        and enable = true
+        and activity = true
+    </select>
+    <select id="selUserApplyInfoListOverLoad" resultType="cn.meta.entity.UserApplyInfo">
+        select
+        <include refid="Base_Column_List"/>
+        from user_apply_info
+        where userCode = #{userCode}
+        and batchCode = #{batchCode}
+        and activityApplyCode = #{activityApplyCode}
+        and `enable` = true
+        and activity = true
+    </select>
+    <select id="selUserApplyInfoByNamePhoneSingle" resultType="cn.meta.entity.UserApplyInfo">
+        select
+        <include refid="Base_Column_List"/>
+        from user_apply_info
+        where activityApplyCode = #{activityApplyCode}
+        and userCode in (
+        select userCode from user_apply_info where blockCode = #{blockCode} and blockContent = #{blockContent}
+        )
+    </select>
+
+</mapper>

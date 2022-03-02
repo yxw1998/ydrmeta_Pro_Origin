@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.meta.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="cn.meta.entity.UserInfo">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="userCode" jdbcType="VARCHAR" property="userCode"/>
+        <result column="userAccount" jdbcType="VARCHAR" property="userAccount"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="sex" jdbcType="INTEGER" property="sex"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="isApplied" jdbcType="INTEGER" property="isApplied"/>
+        <result column="wxName" jdbcType="VARCHAR" property="wxName"/>
+        <result column="pubOpenId" jdbcType="VARCHAR" property="pubOpenId"/>
+        <result column="miniOpenId" jdbcType="VARCHAR" property="miniOpenId"/>
+        <result column="addTime" jdbcType="TIMESTAMP" property="addTime"/>
+        <result column="updateTime" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="enable" jdbcType="BIT" property="enable"/>
+        <result column="activity" jdbcType="BIT" property="activity"/>
+        <result column="createrCode" jdbcType="VARCHAR" property="createrCode"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        userCode, userAccount, `password`, `name`, sex, phone, isApplied, wxName, pubOpenId,
+    miniOpenId
+    </sql>
+
+    <insert id="miniRegister" keyColumn="id" keyProperty="id" parameterType="cn.meta.entity.UserInfo"
+            useGeneratedKeys="true">
+        insert into user (userCode, userAccount, `password`,
+                          `name`, sex, phone, isApplied,
+                          wxName, pubOpenId, miniOpenId,
+                          addTime, updateTime, `enable`,
+                          activity, createrCode)
+        values (#{userCode,jdbcType=VARCHAR}, #{userAccount,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+                #{name,jdbcType=VARCHAR}, #{sex,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR},
+                false,
+                #{wxName,jdbcType=VARCHAR}, #{pubOpenId,jdbcType=VARCHAR}, #{miniOpenId,jdbcType=VARCHAR},
+                now(),
+                null, true, true,
+                #{createrCode,jdbcType=VARCHAR})
+    </insert>
+    <update id="updateIsApplied">
+        update user
+        set isApplied = 1
+        where userCode = #{userCode}
+          and activity = true
+          and enable = true
+    </update>
+    <select id="selUserByMiniOpenId" resultType="cn.meta.entity.UserInfo">
+        select
+        <include refid="Base_Column_List"/>
+        from user
+        where miniOpenId = #{miniOpenId}
+        and activity = true
+        and enable = true
+    </select>
+    <select id="checkRepeatOpenId" resultType="cn.meta.entity.UserInfo">
+        select
+        <include refid="Base_Column_List"/>
+        from user
+        where miniOpenId = #{miniOpenId}
+        and activity = true
+        and enable = true
+    </select>
+    <select id="selUserByPhone" resultType="cn.meta.entity.UserInfo">
+        select *
+        from user
+        where phone = #{phone}
+          and enable = true
+          and activity = true
+    </select>
+</mapper>

@@ -1,0 +1,8 @@
+server:
+  servlet:
+    context-path: /metaStaffWeb
+spring:
+  profiles:
+#    active: prod
+    active: test,ali
+

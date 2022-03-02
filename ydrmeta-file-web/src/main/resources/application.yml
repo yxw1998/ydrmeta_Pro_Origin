@@ -1,0 +1,13 @@
+server:
+  servlet:
+    context-path: /metaFileWeb
+logging:
+  config: classpath:logback-spring.xml
+
+#log:
+#  localLogPath: ../log/fileWebLog
+#  cloudLogPath: fileWebLog
+spring:
+  profiles:
+    active: test
+#    active: prod
